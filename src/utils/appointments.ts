@@ -6,40 +6,52 @@ interface createAp{
     email : string
     firstName : string
     lastName : string
-    password : string
     phoneNumber? : string
-    time : string
     department : string
     note : string
     date :string
-    doctor  : string
 }
 export const createAppointment = async(props:createAp)=>{
-    const {email,firstName,lastName,password,phoneNumber,time,department,note,date,doctor} = props
-    const user = await prisma.users.create({
-        data : {
-            email,
-            password,
-            firstName,
-            lastName,
-            phoneNumber
+    const {email,firstName,lastName,phoneNumber,department,note,date} = props
+    const randomHour = Math.floor(Math.random() * (18 - 9 + 1)) + 9;
+    const hour = randomHour > 12 ? randomHour - 12 : randomHour;
+    const ampm = randomHour >= 12 ? 'pm' : 'am';
+    const time = `${hour} ${ampm}`;
+    console.log(department)
+    const doctor = await prisma.doctors.findFirst({
+        where :{
+            field : department||undefined
         },
-        select : {
-            id : true
+        select:{
+            name:true
         }
     })
-    const appointment = await prisma.appointments.create({
-        data : {
-            time,
-            date,
-            department,
-            doctor,
-            note,
-            userId : user.id
-        },
-        select : {
-            time : true
-        }
-    })
-    console.log(user , appointment)
+    if(doctor){
+        const user = await prisma.users.create({
+            data : {
+                email,
+                firstName,
+                lastName,
+                phoneNumber
+            },
+            select : {
+                id : true
+            }
+        })
+        const appointment = await prisma.appointments.create({
+            data : {
+                time,
+                date,
+                department,
+                doctor : doctor?.name,
+                note,
+                userId : user.id
+            },
+            select : {
+                time : true
+            }
+        })
+        return [user , appointment]
+    }
+    
 }

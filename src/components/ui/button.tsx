@@ -2,10 +2,11 @@
 
 import { cn } from "@/utils/cn-merge";
 import { VariantProps, cva } from "class-variance-authority";
-import { ButtonHTMLAttributes, ReactNode } from "react";
+import { ButtonHTMLAttributes, FormEvent, FormHTMLAttributes, MouseEventHandler, ReactNode } from "react";
 
-export interface btnProps extends ButtonHTMLAttributes<HTMLButtonElement> , VariantProps<typeof buttonvariant> {
+export interface btnProps extends  ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonvariant> {
     children? : ReactNode;
+    action? : (e: FormEvent<HTMLFormElement>) => void
 }
 
 export const buttonvariant = cva( "border" , {
@@ -31,10 +32,15 @@ export const buttonvariant = cva( "border" , {
 })
 
 
-export function Button({children , className , variant , size , value , ...props }:btnProps){
+export function Button({children , className , variant , size , action , value , ...props }:btnProps){
+    const handleAction = (e : any)=>{
+        if(action){
+            action(e)
+        }
+    }
     return (
         <>
-            <button className={cn(buttonvariant({variant , size , className }))} {...props}>{value}</button>
+            <button className={cn(buttonvariant({variant , size , className }))} {...props} onClick={handleAction}>{value}</button>
         </>
     );
 }

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button, btnProps, buttonvariant } from "./ui/button";
 import { VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes, ReactNode } from "react";
-import axios from "axios";
 
 interface buttonprop extends VariantProps<typeof buttonvariant>{
     children? : ReactNode;
@@ -20,7 +19,6 @@ export function Navbar(){
         <div className="flex justify-between border-b py-4 px-12 align-middle gap-10 bg-purple-100">
             <div className="flex flex-row text-center items-center justify-self-start"><span className="lg:text-3xl md:text-2xl sm:text-xl text-lg text-center font-bold">Healthcare</span></div>
             {!isOpen ? <div className=" hidden lg:flex md:flex-shrink" >
-                <NavbarOptions text="About"/>
                 <NavbarOptions text="Services"/>
                 <NavbarOptions text="Doctors"/>
                 <NavbarOptions text="Blog"/>

@@ -1,11 +1,5 @@
-"use client"
-import Image from "next/image"
-import { Navbar } from "./navbar"
 import { Button } from "./ui/button"
-import { Card } from "./card"
 import { DoctorsProfile, HomeTxtCards, ImgCard } from "./homecards"
-import { createUser, getUsers } from "@/utils/users"
-import { createAppointment } from "@/utils/appointments"
 
 export async function Homepage(){
     const body = {

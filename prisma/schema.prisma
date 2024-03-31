@@ -7,13 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
 model Users{
   id Int @id @default(autoincrement())
   email String @unique
   firstName String
   lastName String
   phoneNumber String?
-  password String
   appointment Appointments[]
   feedback Feedback[]
 }
@@ -29,6 +29,7 @@ model Appointments{
   userId Int @unique
   user Users  @relation(fields: [userId] , references: [id])
 }
+
 model Feedback{
   id Int @id @default(autoincrement())
   comment String?
@@ -43,5 +44,4 @@ model Doctors{
   name String @unique
   qualification String
   field String
-  img String
 }
