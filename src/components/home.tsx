@@ -23,7 +23,7 @@ export async function Homepage(){
                 <div className="lg:w-[45%] text-xl text-purple-800"><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis eaque facilis, labore 
                     delectus neque repudiandae fugit non iste repellendus dolorem assumenda! Deleniti tempore quae 
                     earum reprehenderit officia vero architecto et?</p><br/><br/>
-                    <Button variant={"primary"}  size={"xl"} value={"Make Appointment ->"}  className="text-white font-semibold"/>
+                    <Button variant={"primary"}  size={"xl"} value={"Make Appointment ->"} path="book" className="text-white font-semibold"/>
                 </div>
             </div>
             <img src={"/images/home.jpg"} alt="img" className="w-full md:h-[90vh] h-[50vh] rounded-3xl "/>

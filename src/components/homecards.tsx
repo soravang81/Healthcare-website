@@ -1,6 +1,7 @@
 import { VariantProps } from "class-variance-authority";
 import { Card , cardVariant } from "./card";
 import { HTMLAttributes, HtmlHTMLAttributes, ReactNode } from "react";
+import { getFeedback } from "@/utils/comment";
 
 interface TxtCardProps extends VariantProps<typeof cardVariant> {
     img: number;
@@ -45,9 +46,47 @@ export const DoctorsProfile = ({img , ...props}:imgprops)=>{
 export function HomeTxtCards(){
     return(
         <>
-        <TxtCard img={1} iconclr={"emerald"} variant={"horizontal_md"} colour={"green"} text="Early cancer detection"/>
-        <TxtCard img={2} iconclr={"red"} variant={"horizontal_md"} colour={"red"} text="Clinical neurophysiology"/>
-        <TxtCard img={3} iconclr={"purple"} variant={"horizontal_md"} colour={"purple"} text="Gastoenterology"/>
+        <TxtCard img={1} iconclr={"emerald"} variant={"horizontal_md"} 
+            colour={"green"} text="Early cancer detection"/>
+        <TxtCard img={2} iconclr={"red"} variant={"horizontal_md"} 
+            colour={"red"} text="Clinical neurophysiology"/>
+        <TxtCard img={3} iconclr={"purple"} variant={"horizontal_md"} 
+            colour={"purple"} text="Gastoenterology"/>
+        </>
+    )
+}
+interface img{
+    imgNo :number
+}
+export async function CommentCard(){
+        const res = await getFeedback()
+    return(
+        <>
+            {res.map((item, index) => (
+                <div key={index}>
+                    <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
+                        <div className="flex gap-5">
+                            <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover"/>
+                            <div className="flex flex-col">
+                                <h3 className="text-lg">{item.user.firstName} {item.user.lastName}</h3>
+                                {item.rating === 1 ? '★' :
+                                    item.rating === 2 ? '★★' :
+                                    item.rating === 3 ? '★★★' :
+                                    item.rating === 4 ? '★★★★' :
+                                    item.rating === 5 ? '★★★★★' :
+                                    null
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <h2>{item.comment}</h2>
+                        </div>
+                        <div className="flex items-end h-full">
+                            <h2>{item.updatedAt.toLocaleString()}</h2>
+                        </div>
+                    </Card>
+                </div>
+            ))}
         </>
     )
 }

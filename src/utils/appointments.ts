@@ -45,13 +45,75 @@ export const createAppointment = async(props:createAp)=>{
                 department,
                 doctor : doctor?.name,
                 note,
-                userId : user.id
+                userId : user.id,
             },
             select : {
                 time : true
             }
         })
-        return [user , appointment]
+        return true
     }
     
+}
+
+export const getAppointments = async ( email : string)=>{
+    
+    const res = await prisma.appointments.findFirst({
+        where : {
+            user : {
+                email
+            }
+        },
+        select : {
+            time : true,
+            doctor : true,
+            date : true,
+            department : true
+        }
+    })
+    console.log(res)
+    return res
+}
+export const deleteAppointment = async( email : string)=>{
+    const user = await prisma.users.delete({
+        where : {
+            email
+        },
+        select : {
+            id : true
+        }
+    })
+    if(user){
+        return true
+    }
+    else{
+        return false
+    }
+}
+export const updateAppointment = async( email : string , date : string)=>{
+    const user = await prisma.users.findUnique({
+        where : {
+            email
+        },
+        select : {
+            id : true
+        }
+    })
+    const res = await prisma.appointments.update({
+        where : {
+            userId : user?.id
+        },
+        data : {
+            date
+        },
+        select : {
+            userId : true
+        }
+    })
+    if(res){
+        return true
+    }
+    else{
+        return false
+    }
 }

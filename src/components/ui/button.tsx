@@ -1,12 +1,16 @@
 "use client"
 
+import { createcomment } from "@/app/(pages)/book/page";
 import { cn } from "@/utils/cn-merge";
 import { VariantProps, cva } from "class-variance-authority";
+import { useRouter } from "next/navigation";
 import { ButtonHTMLAttributes, FormEvent, FormHTMLAttributes, MouseEventHandler, ReactNode } from "react";
 
 export interface btnProps extends  ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonvariant> {
     children? : ReactNode;
     action? : (e: FormEvent<HTMLFormElement>) => void
+    fnc? : (e : ButtonHTMLAttributes<HTMLButtonElement>) =>void
+    path? : string
 }
 
 export const buttonvariant = cva( "border" , {
@@ -32,15 +36,25 @@ export const buttonvariant = cva( "border" , {
 })
 
 
-export function Button({children , className , variant , size , action , value , ...props }:btnProps){
+export function Button({children , className , variant , size , action , fnc , value , path , ...props }:btnProps){
+    const router = useRouter()
     const handleAction = (e : any)=>{
+        
         if(action){
             action(e)
         }
+        if(fnc){
+            fnc(e)
+        }
+        if(path){
+            router.push(`/${path}`)
+        }
     }
+    
     return (
         <>
             <button className={cn(buttonvariant({variant , size , className }))} {...props} onClick={handleAction}>{value}</button>
         </>
     );
 }
+

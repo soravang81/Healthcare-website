@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^5.11.0",
     "@prisma/extension-accelerate": "^1.0.0",
     "@types/classnames": "^2.3.1",
@@ -22,6 +24,8 @@
     "react-date-picker": "^10.6.0",
     "react-datepicker": "^6.6.0",
     "react-dom": "^18",
+    "react-fontawesome": "^1.7.1",
+    "recoil": "^0.7.7",
     "tailwind-merge": "^2.2.2"
   },
   "devDependencies": {

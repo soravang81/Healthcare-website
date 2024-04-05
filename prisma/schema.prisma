@@ -27,7 +27,7 @@ model Appointments{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId Int @unique
-  user Users  @relation(fields: [userId] , references: [id])
+  user Users  @relation(fields: [userId] , references: [id] ,onDelete: Cascade)
 }
 
 model Feedback{

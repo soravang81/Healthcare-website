@@ -3,6 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { createAppointment } from "@/utils/appointments";
 import { useRef, useState } from "react"
+import Loader from "../../../../loading";
+import { useRecoilState } from "recoil";
+import { isLoading } from "@/app/recoil/state";
 
 export default function BookForm(){
     const [firstName,setfName] = useState<string>("");
@@ -12,17 +15,25 @@ export default function BookForm(){
     const [date, setSelectedDate] = useState<string>("");
     const [note,setNote] = useState<string>("");
     const [department, setDepartment] = useState<string>("")
+    const [isCreated, setCreated] = useState<boolean>(false)
     const formRef = useRef<HTMLFormElement>(null);
+    const [loading , setLoading] = useRecoilState<boolean>(isLoading)
 
     async function handleSubmit(e:React.FormEvent<HTMLFormElement>){
+        setLoading(true)
         e.preventDefault()
         formRef.current?.reset()
         const res = await createAppointment({email,phoneNumber,firstName,lastName,department,date,note})
-        console.log(res)
+        setLoading(false)
+        if(res){
+            setCreated(true)
+        }
     }
     return(
         <div className="w-full h-full  md:p-4 p-2 text-xl">
-            <form ref={formRef}>
+            {loading ? <Loader/> : null}
+            {isCreated ? <div>Appointment book succesfully</div> : null}
+            <form ref={formRef} onChange={()=>{setCreated(false)}}>
                 <div className="flex gap-4 p-2 w-full md:flex-row flex-col">
                     <label className="p-1 flex flex-col gap-2 w-full ">First name*<br/>
                         <input
