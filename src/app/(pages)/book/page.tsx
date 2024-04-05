@@ -1,5 +1,5 @@
 import BookForm from "./bookform";
-import { CommentCard } from "@/components/homecards";
+import { CommentCard, Create } from "./comments";
 
 export default async function Book (){
     return(
@@ -23,6 +23,7 @@ export default async function Book (){
         <div className="md:px-24 md:pb-24 sm:px-16 sm:pb-16 px-8 pb-8 flex flex-col items-start lg:gap-20 gap-12 ">
             <h1 className="lg:text-6xl text-5xl text-purple-950 font-bold self-start">Our <span className="text-purple-500 italic">patient's</span> Feedbacks</h1>
             <div className="flex gap-10 overflow-hidden">
+                <Create/>
                 <CommentCard />
             </div>
         </div>

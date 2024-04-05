@@ -76,18 +76,10 @@ export const updateFeedback = async(email : string ,comment : string)=>{
         return false
     }
 }
-export const deleteFeedback = async(email:string)=>{
-    const user = await prisma.users.findUnique({
-        where : {
-            email
-        },
-        select : {
-            id : true
-        }
-    })
+export const deleteFeedback = async(id:number)=>{
     const res = await prisma.feedback.delete({
         where : {
-            userId : user?.id
+            id
         },
         select : {
             id : true

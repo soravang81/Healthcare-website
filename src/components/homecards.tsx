@@ -1,7 +1,8 @@
 import { VariantProps } from "class-variance-authority";
 import { Card , cardVariant } from "./card";
 import { HTMLAttributes, HtmlHTMLAttributes, ReactNode } from "react";
-import { getFeedback } from "@/utils/comment";
+import { deleteFeedback, getFeedback } from "@/utils/comment";
+import { HiArchiveBoxXMark } from "react-icons/hi2";
 
 interface TxtCardProps extends VariantProps<typeof cardVariant> {
     img: number;
@@ -58,36 +59,5 @@ export function HomeTxtCards(){
 interface img{
     imgNo :number
 }
-export async function CommentCard(){
-        const res = await getFeedback()
-    return(
-        <>
-            {res.map((item, index) => (
-                <div key={index}>
-                    <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
-                        <div className="flex gap-5">
-                            <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover"/>
-                            <div className="flex flex-col">
-                                <h3 className="text-lg">{item.user.firstName} {item.user.lastName}</h3>
-                                {item.rating === 1 ? '★' :
-                                    item.rating === 2 ? '★★' :
-                                    item.rating === 3 ? '★★★' :
-                                    item.rating === 4 ? '★★★★' :
-                                    item.rating === 5 ? '★★★★★' :
-                                    null
-                                }
-                            </div>
-                        </div>
-                        <div>
-                            <h2>{item.comment}</h2>
-                        </div>
-                        <div className="flex items-end h-full">
-                            <h2>{item.updatedAt.toLocaleString()}</h2>
-                        </div>
-                    </Card>
-                </div>
-            ))}
-        </>
-    )
-}
+
         
