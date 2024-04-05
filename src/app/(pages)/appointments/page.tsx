@@ -31,7 +31,7 @@ export default function Appointments(){
         if(isfetched){
             getdata()
         }
-    },[])
+    })
     const getdata = async()=>{
         setLoading(true)
         const res = await getAppointments(email)

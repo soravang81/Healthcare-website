@@ -24,7 +24,7 @@ export function CommentCard(){
                 <div key={index} onMouseOver={()=>setShowDeletebtn(true)} onMouseLeave={()=>setShowDeletebtn(false)} >
                     <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
                         <div className="flex gap-5  w-full ">
-                            <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover"/>
+                            <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover" alt="img"/>
                             <div className="flex flex-col  w-full ">
                                 <h3 className="text-lg  w-full ">{item.user.firstName} {item.user.lastName}</h3>
                                 {   item.rating === 1 ? '★' :
@@ -83,6 +83,6 @@ const Deletebtn = ( { ...props}:btnPropss)=>{
 export function Create(){
     const [refetch,setrefetch] = useRecoilState<boolean>(reFetch)
     return(
-        <button onClick={async()=>{await createFeedback("aryan@gmail.com" , "fbdgbfdgbdbfdbfbtyntbdfgbtbgfdsvsgrenbgd" , 4);setrefetch(!refetch)}}>ADDnewrandomcomment</button>
+        <button onClick={async()=>{await createFeedback("aryan@gmail.com" , "fbdgbfdgbdbfdbfbtyntbdfgbtbgfdsvsgrenbgd" , 4);setrefetch(!refetch)}}></button>
     )
 }

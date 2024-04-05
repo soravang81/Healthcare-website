@@ -40,7 +40,7 @@ export function Card({children , className , variant , image , colour , ...props
     return(
         <>
         {image ? <div>
-            <img src={imageurl}></img>
+            <img src={imageurl} alt="img"></img>
         </div>
         :<div>
             <div className={cn(cardVariant({variant , colour , className}))} {...props}>{children}</div>

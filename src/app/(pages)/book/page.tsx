@@ -16,12 +16,12 @@ export default async function Book (){
         <div className="md:p-24 sm:p-16 p-8 lg:gap-20 gap-12 flex lg:flex-row flex-col w-full ">
             <BookForm/>
             <div className=" w-full h-full rounded-3xl pt-7">
-                <img src="/images/book.png" className=" w-full h-full rounded-3xl"></img>
+                <img src="/images/book.png" className=" w-full h-full rounded-3xl" alt="img"></img>
             </div>
         </div>
         {/* -----------      comments       ----------- */}
         <div className="md:px-24 md:pb-24 sm:px-16 sm:pb-16 px-8 pb-8 flex flex-col items-start lg:gap-20 gap-12 ">
-            <h1 className="lg:text-6xl text-5xl text-purple-950 font-bold self-start">Our <span className="text-purple-500 italic">patient's</span> Feedbacks</h1>
+            <h1 className="lg:text-6xl text-5xl text-purple-950 font-bold self-start">Our <span className="text-purple-500 italic">patients</span> Feedbacks</h1>
             <div className="flex gap-10 overflow-hidden">
                 <Create/>
                 <CommentCard />

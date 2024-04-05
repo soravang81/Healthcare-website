@@ -48,7 +48,7 @@ export async function Homepage(){
                 </div>
             </div>
             <div className="flex flex-row lg:gap-10 md:gap-6 gap-2">
-                <ImgCard img={2} /> <ImgCard img={3} /> <ImgCard img={4} />
+                <ImgCard img={2}  /> <ImgCard img={3} /> <ImgCard img={4} />
             </div>
         </div>
         {/* -----------      4th PAGE       ----------- */}
@@ -63,8 +63,6 @@ export async function Homepage(){
                 <DoctorsProfile img={1}/>
                 <DoctorsProfile img={2}/>
                 <DoctorsProfile img={3}/>
-            </div>
-            <div>  //    SWIPE BUTTONS     ....to be added    
             </div>
         </div>
         {/* -----------      5th PAGE       ----------- */}
