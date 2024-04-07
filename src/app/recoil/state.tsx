@@ -16,6 +16,15 @@ export const deletebtn = atom({
   key: 'deletebtn',
   default: false,
 });
+export const CommentPopup = atom({
+  key: 'CommentPopup',
+  default: false,
+});
+export const Curremail = atom({
+  key: 'Curremail',
+  default: "sourav"
+});
+
 interface Comment {
   id: number;
   user: {
