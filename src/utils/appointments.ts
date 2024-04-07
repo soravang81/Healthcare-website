@@ -17,7 +17,6 @@ export const createAppointment = async(props:createAp)=>{
     const hour = randomHour > 12 ? randomHour - 12 : randomHour;
     const ampm = randomHour >= 12 ? 'pm' : 'am';
     const time = `${hour} ${ampm}`;
-    console.log(department)
     const doctor = await prisma.doctors.findFirst({
         where :{
             field : department||undefined
@@ -27,37 +26,62 @@ export const createAppointment = async(props:createAp)=>{
         }
     })
     if(doctor){
-        const user = await prisma.users.create({
-            data : {
-                email,
-                firstName,
-                lastName,
-                phoneNumber
+        const user = await prisma.users.findFirst({
+            where : {
+                email
             },
             select : {
                 id : true
             }
         })
-        const appointment = await prisma.appointments.create({
-            data : {
-                time,
-                date,
-                department,
-                doctor : doctor?.name,
-                note,
-                userId : user.id,
-            },
-            select : {
-                time : true
-            }
-        })
+        if(user){
+            const appointment = await prisma.appointments.create({
+                data : {
+                    time,
+                    date,
+                    department,
+                    doctor : doctor?.name,
+                    note,
+                    userId : user.id,
+                },
+                select : {
+                    time : true
+                }
+            })
+            return true
+        }
+        else{
+            const create = await prisma.users.create({
+                data : {
+                    email,
+                    firstName,
+                    lastName,
+                    phoneNumber
+                },
+                select : {
+                    id : true
+                }
+            })
+            const appointment = await prisma.appointments.create({
+                data : {
+                    time,
+                    date,
+                    department,
+                    doctor : doctor?.name,
+                    note,
+                    userId : create.id,
+                },
+                select : {
+                    time : true
+                }
+            })
+        }
         return true
     }
     
 }
 
 export const getAppointments = async ( email : string)=>{
-    
     const res = await prisma.appointments.findFirst({
         where : {
             user : {
@@ -71,7 +95,6 @@ export const getAppointments = async ( email : string)=>{
             department : true
         }
     })
-    console.log(res)
     return res
 }
 export const deleteAppointment = async( email : string)=>{

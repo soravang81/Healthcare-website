@@ -17,7 +17,7 @@ export default function BookForm(){
     const [date, setSelectedDate] = useState<string>("");
     const [note,setNote] = useState<string>("");
     const [department, setDepartment] = useState<string>("")
-    const [isCreated, setCreated] = useState<boolean>(false)
+    const [isBooked, setBooked] = useState<boolean>(false)
     const formRef = useRef<HTMLFormElement>(null);
     const [loading , setLoading] = useRecoilState<boolean>(isLoading)
 
@@ -28,14 +28,14 @@ export default function BookForm(){
         const res = await createAppointment({email,phoneNumber,firstName,lastName,department,date,note})
         setLoading(false)
         if(res){
-            setCreated(true)
+            setBooked(true)
         }
     }
     return(
         <div className="w-full h-full  md:p-4 p-2 text-xl">
             {loading ? <Loader/> : null}
-            {isCreated ? <div>Appointment book succesfully</div> : null}
-            <form ref={formRef} onChange={()=>{setCreated(false)}}>
+            {isBooked ? <div>Appointment book succesfully</div> : null}
+            <form ref={formRef} onChange={()=>{setBooked(false);setLoading(false)}}>
                 <div className="flex gap-4 p-2 w-full md:flex-row flex-col">
                     <label className="p-1 flex flex-col gap-2 w-full ">First name*<br/>
                         <input

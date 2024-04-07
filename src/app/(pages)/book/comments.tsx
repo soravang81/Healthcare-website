@@ -9,19 +9,28 @@ import { HiArchiveBoxXMark } from "react-icons/hi2"
 
 export function CommentCard(){
     const [showDeletebtn , setShowDeletebtn] = useRecoilState(deletebtn)
+    const [isEmpty , setIsEmpty] = useState(false)
     const refetchComments = useRecoilValue<boolean>(reFetch)
     const [res , setCommentArr] = useRecoilState(comments)
     useEffect(()=>{
         async function getcmnt() {
+        setIsEmpty(false)
         const res = await getFeedback()
+        console.log(res.length)
+        if(res.length<1){
+            console.log("emptyy")
+            setIsEmpty(true)
+        }
         setCommentArr(res)
         }
         getcmnt()
     },[refetchComments])
     return(
         <>
+            {isEmpty ? <div>There are no comments yet</div>:null}
             {res.map((item, index) => (
                 <div key={index} onMouseOver={()=>setShowDeletebtn(true)} onMouseLeave={()=>setShowDeletebtn(false)} >
+                    
                     <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
                         <div className="flex gap-5  w-full ">
                             <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover" alt="img"/>
@@ -83,6 +92,6 @@ const Deletebtn = ( { ...props}:btnPropss)=>{
 export function Create(){
     const [refetch,setrefetch] = useRecoilState<boolean>(reFetch)
     return(
-        <button onClick={async()=>{await createFeedback("aryan@gmail.com" , "fbdgbfdgbdbfdbfbtyntbdfgbtbgfdsvsgrenbgd" , 4);setrefetch(!refetch)}}></button>
+        <button onClick={async()=>{await createFeedback("sourav" , "fbdgbfdgbdbfdbfbtyntbdfgbtbgfdsvsgrenbgd" , 4);setrefetch(!refetch)}}>hii</button>
     )
 }

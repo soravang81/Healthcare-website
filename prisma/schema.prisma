@@ -37,7 +37,7 @@ model Feedback{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId Int @unique
-  user Users @relation(fields: [userId] , references: [id])
+  user Users @relation(fields: [userId] , references: [id] ,onDelete: Cascade)
 }
 model Doctors{
   id Int @id @default(autoincrement())

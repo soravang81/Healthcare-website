@@ -26,22 +26,18 @@ export default function Appointments(){
     const inputform = useRef<HTMLFormElement>(null);
     const [loading , setLoading] = useRecoilState<boolean>(isLoading)
     const router = useRouter()
-
-    useEffect(()=>{
-        if(isfetched){
-            getdata()
-        }
-    })
     const getdata = async()=>{
         setLoading(true)
+        setIsDeleted(false)
+        setIsFetched(false)
         const res = await getAppointments(email)
+        setLoading(false)
         if(res){
-            setLoading(false)
-            console.log(res)
             setData(res || null)
             setIsFetched(true)
         }
         else{
+            setIsFetched(false)
             setLoading(false)
             setNotFound(true)
         }
@@ -53,6 +49,7 @@ export default function Appointments(){
     const cancelAp = async ()=>{
         setLoading(true)
         const res = await deleteAppointment(email);
+        setIsFetched(false)
         setLoading(false)
         if(res){
             setIsDeleted(true)
@@ -61,14 +58,16 @@ export default function Appointments(){
             }, 5000);
         }
     }
-    const handleEdit = ()=>{
+    const handleEdit = async ()=>{
         setDateSelect(true)
-        const res = updateAppointment(email,newDate)
+        const res = await updateAppointment(email,newDate)
         setLoading(false)
     }
     const updateAp = async ()=>{
         setLoading(true)
         const res = await updateAppointment(email , newDate);
+        setDateSelect(false)
+        setIsFetched(false)
         setLoading(false)
         if(res){
             setIsUpdated(true)
@@ -85,7 +84,7 @@ export default function Appointments(){
                 </div> */}
                 <div>If you want to book an Appointment click <button className="border-none bg-transparent underline" onClick={()=>router.push("/book")}>here</button></div>
                 <div className="flex lg:flex-row flex-col gap-10">
-                <form ref={inputform}>
+                <form ref={inputform} onSubmit={handleSubmit} className="flex md:gap-8 gap-6">
                 <input
                     type="text"
                     name="email"
@@ -97,10 +96,11 @@ export default function Appointments(){
                         setIsDeleted(false)
                         setDateSelect(false)
                         setIsUpdated(false)
+                        setNotFound(false)
                     }}
                 />
+                <Button variant={"primary"} size={"lg"} value={"Submit"} className="lg:w-60 md:w-48 w-32 text-white font-semibold" fnc={getdata}/>
                 </form>
-                <Button variant={"primary"} size={"lg"} value={"Submit"} className="lg:w-60 md:w-48 w-32 text-white font-semibold" action={handleSubmit} fnc={getdata} onClick={()=>setLoading(true)} type="submit"/>
                 </div>
                 {isDeleted ? <div>Appointment Cancelled succesfully.</div> : null}
                 {isUpdated ? <div>Appointment Updated succesfully.</div> : null}
