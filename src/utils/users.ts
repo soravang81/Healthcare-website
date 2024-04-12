@@ -5,22 +5,55 @@ export const getUsers = async ()=>{
     const res = await prisma.users.findMany({})
     return res;
 }
+export interface VerifyUser {
+    email?: string;
+    password?: string;
+}
+export const verifyUsers = async ({email , password}:VerifyUser)=>{
+    // console.log(email, password)
+    const res = await prisma.users.findFirst({
+        where : {
+            email,
+            password
+        },
+        select: {
+            id : true,
+            email : true,
+            password : true
+        }
+    })
+    // console.log(res)
+    if(res){
+        return res
+    }
+    else{
+        return false
+    }
+}
 interface createUser{
     email : string,
     password : string,
-    firstName : string,
-    lastName : string
+    name : string
 }
-export const createUser = async ( {email , password , firstName , lastName } : createUser)=>{
+export const createUser = async ( {email , password , name } : createUser)=>{
+    // console.log(
+    //     email,
+    //     password,
+    //     name)
     const res = await prisma.users.create({
         data: {
             email,
-            firstName,
-            lastName
+            password,
+            name
         },
         select:{
             email : true
         }
     })
-    return res;
+    if(res){
+        return true
+    }
+    else{
+        return false;
+    }
 }

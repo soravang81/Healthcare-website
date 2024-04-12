@@ -1,5 +1,6 @@
 import BookForm from "./bookform";
-import { Addbtn, CommentAddPopup, CommentCard } from "./comments";
+import Addbtn from "./addbtn";
+import { CommentAddPopup, CommentCard, Error} from "./comments";
 
 export default async function Book (){
     return(
@@ -26,8 +27,11 @@ export default async function Book (){
                 <Addbtn/>
                 <CommentAddPopup/>
             </div>
-            <div className="flex gap-10 overflow-hidden">
-                <CommentCard />
+            <div className="flex gap-5 flex-col overflow-hidden">
+                <Error/>
+                <div className="flex gap-10">
+                    <CommentCard />
+                </div>
             </div>
         </div>
         </>

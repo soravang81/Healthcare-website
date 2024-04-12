@@ -21,7 +21,7 @@ export function Navbar(){
 
     return(
         <div className="flex justify-between border-b py-4 px-12 align-middle gap-10 bg-purple-100">
-            <button className="flex flex-row text-center items-center justify-self-start" onClick={()=>router.push("/")}><span className="lg:text-3xl md:text-2xl sm:text-xl text-lg text-center font-bold">Healthcare</span></button>
+            <button className="flex flex-row text-center items-center justify-self-start" onClick={()=>router.push("/home")}><span className="lg:text-3xl md:text-2xl sm:text-xl text-lg text-center font-bold">Healthcare</span></button>
             {!isOpen ? <div className=" hidden lg:flex md:flex-shrink" >
                 <NavbarOptions text="Services"/>
                 <NavbarOptions text="Doctors"/>

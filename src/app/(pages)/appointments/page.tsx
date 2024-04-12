@@ -5,7 +5,7 @@ import { deleteAppointment , getAppointments, updateAppointment } from "../../..
 import { Button } from "@/components/ui/button"
 import Loader from "../../../../loading"
 import { useRecoilState } from "recoil"
-import { isLoading } from "../../recoil/state"
+import { isLoading } from "../../../recoil/state"
 import { useRouter } from "next/navigation"
 
 export default function Appointments(){

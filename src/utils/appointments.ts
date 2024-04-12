@@ -26,7 +26,7 @@ export const createAppointment = async(props:createAp)=>{
         }
     })
     if(doctor){
-        const user = await prisma.users.findFirst({
+        const user = await prisma.bookedUser.findFirst({
             where : {
                 email
             },
@@ -42,7 +42,7 @@ export const createAppointment = async(props:createAp)=>{
                     department,
                     doctor : doctor?.name,
                     note,
-                    userId : user.id,
+                    buid : user.id,
                 },
                 select : {
                     time : true
@@ -51,7 +51,7 @@ export const createAppointment = async(props:createAp)=>{
             return true
         }
         else{
-            const create = await prisma.users.create({
+            const create = await prisma.bookedUser.create({
                 data : {
                     email,
                     firstName,
@@ -69,7 +69,7 @@ export const createAppointment = async(props:createAp)=>{
                     department,
                     doctor : doctor?.name,
                     note,
-                    userId : create.id,
+                    buid : create.id,
                 },
                 select : {
                     time : true
@@ -98,7 +98,7 @@ export const getAppointments = async ( email : string)=>{
     return res
 }
 export const deleteAppointment = async( email : string)=>{
-    const user = await prisma.users.delete({
+    const user = await prisma.bookedUser.delete({
         where : {
             email
         },
@@ -114,7 +114,7 @@ export const deleteAppointment = async( email : string)=>{
     }
 }
 export const updateAppointment = async( email : string , date : string)=>{
-    const user = await prisma.users.findUnique({
+    const user = await prisma.bookedUser.findUnique({
         where : {
             email
         },
@@ -124,13 +124,13 @@ export const updateAppointment = async( email : string , date : string)=>{
     })
     const res = await prisma.appointments.update({
         where : {
-            userId : user?.id
+            buid : user?.id
         },
         data : {
             date
         },
         select : {
-            userId : true
+            buid : true
         }
     })
     if(res){

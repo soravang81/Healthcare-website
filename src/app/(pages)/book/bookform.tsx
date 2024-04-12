@@ -5,7 +5,7 @@ import { createAppointment } from "@/utils/appointments";
 import { useRef, useState } from "react"
 import Loader from "../../../../loading";
 import { useRecoilState } from "recoil";
-import { isLoading } from "@/app/recoil/state";
+import { isLoading } from "@/recoil/state";
 
 
 

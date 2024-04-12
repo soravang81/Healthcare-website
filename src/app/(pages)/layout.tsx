@@ -14,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
       <>
-      <RecoilRoot>{children}</RecoilRoot>
+      <RecoilRoot>
+        <Navbar/>
+        {children}
+        </RecoilRoot>
       </>
   );
 }

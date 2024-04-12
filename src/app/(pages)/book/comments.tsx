@@ -1,41 +1,160 @@
 "use client"
 import { Card } from "@/components/card"
-import { createFeedback, deleteFeedback, getFeedback } from "@/utils/comment"
+import { createFeedback, deleteFeedback, getFeedback, getUserFeedback } from "@/utils/comment"
 import { ButtonHTMLAttributes, ReactNode, useEffect, useState } from "react"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { CommentPopup, DeleteCommentbtn, comments, deletebtn, Curremail, reFetch } from "@/app/recoil/state"
+import { CommentPopup, DeleteCommentbtn, comments, deletebtn, currentUserEmail, reFetch, userComments, errormsg } from "@/recoil/state"
 import { HiArchiveBoxXMark } from "react-icons/hi2"
+import { getSession, useSession } from "next-auth/react"
+import Loader from "../../../../loading"
+import { isLoading } from "@/recoil/state";
+import { HiXCircle } from "react-icons/hi2";
 
+// export function UserComment() {
+//     const [ifExists, setIfExists] = useState(false);
+//     const refetchComments = useRecoilValue<boolean>(reFetch);
+//     const [userComment, setUserComment] = useRecoilState(userComments);
+//     const [showDeletebtn , setShowDeletebtn] = useRecoilState<boolean>(deletebtn)
+//     const [loading , setLoading] = useRecoilState<boolean>(isLoading)
+
+//     useEffect(() => {
+//         setLoading(true)
+//         const getUserComment = async () => {
+//             const session = await getSession()
+//             const email = session?.user?.email
+//             if(email) {
+//                 const res = await getUserFeedback();
+//                 setLoading(false)
+//                 if (res) {
+//                     setIfExists(true);
+//                     setUserComment(res);
+//                 } else {
+//                     setIfExists(false);
+//                     setUserComment(null);
+//                 }
+//             }
+//         };
+//         getUserComment();
+//     }, [refetchComments]);
+
+//     return (
+//         <>
+//             {ifExists ? (
+//                 <div onMouseOver={() => setShowDeletebtn(true)} onMouseLeave={() => setShowDeletebtn(false)}>
+//                     <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
+//                         <div className="flex gap-5  w-full ">
+//                             {loading ? <Loader/> : null}
+//                             <img src={`/profile/image1.jpg`} className="rounded-full w-12 object-cover" alt="img" />
+//                             <div className="flex flex-col  w-full ">
+//                                 <h3 className="text-lg w-full ">{userComment?.user.name}</h3>
+//                                 <div>
+//                                     {userComment?.rating != null && (
+//                                         <>
+//                                             {userComment.rating === 1 && '★'}
+//                                             {userComment.rating === 2 && '★★'}
+//                                             {userComment.rating === 3 && '★★★'}
+//                                             {userComment.rating === 4 && '★★★★'}
+//                                             {userComment.rating === 5 && '★★★★★'}
+//                                         </>
+//                                     )}
+//                                 </div>
+//                             </div>
+//                             <Deletebtn id={userComment?.id.toString()} className="items-end" />
+//                         </div>
+//                         <div>
+//                             <h2>{userComment?.comment}</h2>
+//                         </div>
+//                         <div className="flex items-end h-full">
+//                             <h2>{userComment?.updatedAt.toLocaleString()}</h2>
+//                         </div>
+//                     </Card>
+//                 </div>
+//             ) :null}
+//         </>
+//     );
+// }
 
 export function CommentCard(){
-    const [showDeletebtn , setShowDeletebtn] = useRecoilState<boolean>(deletebtn)
     const [isEmpty , setIsEmpty] = useState(false)
-    const refetchComments = useRecoilValue<boolean>(reFetch)
     const [res , setCommentArr] = useRecoilState(comments)
-    useEffect(()=>{
-        async function getcmnt() {
-        setIsEmpty(false)
-        const res = await getFeedback()
-        console.log(res.length)
-        if(res.length<1){
-            console.log("emptyy")
-            setIsEmpty(true)
-        }
-        setCommentArr(res)
-        }
-        getcmnt()
-    },[refetchComments])
+    const { data : session } = useSession()
+    const [ifExists, setIfExists] = useState(false);
+    const refetchComments = useRecoilValue<boolean>(reFetch);
+    const [userComment, setUserComment] = useRecoilState(userComments);
+    const [showDeletebtn , setShowDeletebtn] = useRecoilState<boolean>(deletebtn)
+    const [loading , setLoading] = useRecoilState<boolean>(isLoading)
+    
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true); // Set loading to true initially
+            
+            try {
+                // Fetch user comment and comment array concurrently
+                const [userCommentRes, commentArrRes] = await Promise.all([getUserFeedback(), getFeedback()]);
+
+                // Process user comment result
+                if (userCommentRes) {
+                    setIfExists(true);
+                    setUserComment(userCommentRes);
+                } else {
+                    setIfExists(false);
+                    setUserComment(null);
+                }
+
+                // Process comment array result
+                setLoading(false);
+                setIsEmpty(!commentArrRes);
+                setCommentArr(commentArrRes || []);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [refetchComments]);
     return(
         <>
+            {ifExists ? (
+                <div onMouseOver={() => setShowDeletebtn(true)} onMouseLeave={() => setShowDeletebtn(false)}>
+                    <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
+                        <div className="flex gap-5  w-full ">
+                            
+                            <img src={`/profile/image1.jpg`} className="rounded-full w-12 object-cover" alt="img" />
+                            <div className="flex flex-col  w-full ">
+                                <h3 className="text-lg w-full ">{userComment?.user.name}</h3>
+                                <div>
+                                    {userComment?.rating != null && (
+                                        <>
+                                            {userComment.rating === 1 && '★'}
+                                            {userComment.rating === 2 && '★★'}
+                                            {userComment.rating === 3 && '★★★'}
+                                            {userComment.rating === 4 && '★★★★'}
+                                            {userComment.rating === 5 && '★★★★★'}
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            <Deletebtn id={userComment?.id.toString()} className="items-end" />
+                        </div>
+                        <div>
+                            <h2>{userComment?.comment}</h2>
+                        </div>
+                        <div className="flex items-end h-full">
+                            <h2>{userComment?.updatedAt.toLocaleString()}</h2>
+                        </div>
+                    </Card>
+                </div>
+            ) :null}
             {isEmpty ? <div>There are no comments yet</div>:null}
             {res.map((item, index) => (
-                <div key={index} onMouseOver={()=>setShowDeletebtn(true)} onMouseLeave={()=>setShowDeletebtn(false)} >
-                    
+                <div key={index} >  
                     <Card variant={"horizontal_sm"} colour={"purple"} className="flex flex-col p-6 gap-6">
                         <div className="flex gap-5  w-full ">
                             <img src={`/profile/image${index+1}.jpg`} className="rounded-full w-12 object-cover" alt="img"/>
                             <div className="flex flex-col  w-full ">
-                                <h3 className="text-lg  w-full ">{item.user.firstName} {item.user.lastName}</h3>
+                                <h3 className="text-lg  w-full ">{item.user.name}</h3>
                                 {   item.rating === 1 ? '★' :
                                     item.rating === 2 ? '★★' :
                                     item.rating === 3 ? '★★★' :
@@ -44,7 +163,6 @@ export function CommentCard(){
                                     null
                                 }
                             </div>
-                            <Deletebtn id={item.id.toString()} className="items-end"/>
                         </div>
                         <div>
                             <h2>{item.comment}</h2>
@@ -89,36 +207,38 @@ const Deletebtn = ( { ...props}:btnPropss)=>{
             {/* Will add user to be able to remove his comment only when i add signup and login feature  */}
         </>
 )}
-export function Addbtn(){
-    const [isPopup,setPopup] = useRecoilState<boolean>(CommentPopup)
-    const handleClick = () =>{
-        setPopup(true)
-    }
-    return(
-        <button className="self-end"
-            onClick={handleClick}>
-            <img src="/icons/add.svg" className="w-14"></img>
-        </button>
-    )
-}
+
 
 export function CommentAddPopup() {
   const [isPopup, setPopup] = useRecoilState<boolean>(CommentPopup);
   const [refetch,setrefetch] = useRecoilState<boolean>(reFetch)
-  const [email, setEmail] = useRecoilState<string>(Curremail);
   const [rating, setRating] = useState<number>(0);
+  const [userExists, setUserExists] = useRecoilState<boolean>(errormsg);
   const [comment, setComment] = useState<string>("");
-
+    
   const handleClick = (index: number) => {
     setRating(index + 1);
   };
   const handleSubmit = async()=>{
-    const res = await createFeedback(email,comment,rating,)
-    setPopup(false)
-    setrefetch(!refetch)
+    try{
+        setRating(0)
+        const res = await createFeedback(comment,rating,)
+        if(res){
+            setPopup(false)
+            setrefetch(!refetch)
+        }
+        else{
+            setPopup(false)
+            setUserExists(true)
+        }
+    }
+    catch(e){
+        console.error(e);
+    }
   }
   return (
     <>
+      
       {isPopup ? 
         <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-transparent bg-opacity-50 backdrop-filter backdrop-blur-lg z-10" onClick={() => setPopup(false)}>
           <div className="w-[20rem] h-[20rem] bg-slate-50 shadow-md rounded-xl p-5 z-20" onClick={(e)=>e.stopPropagation()}>
@@ -153,4 +273,15 @@ export function CommentAddPopup() {
       }
     </>
   );
+}
+export const Error = ()=>{
+    const [userExists, setUserExists] = useRecoilState<boolean>(errormsg);
+    return(
+        <>
+        {userExists ? <div className="text-xl font-semibold text-red-600 text-center flex gap-2"><HiXCircle /> User can add only 1 comment , you can edit your comment if you want.</div>:null}</>
+    )
+}
+const Loaderr = ()=>{
+    const [loading , setLoading] = useRecoilState<boolean>(isLoading)
+    {loading ? <Loader/> : null}
 }

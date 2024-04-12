@@ -12,24 +12,31 @@ export const reFetch = atom({
   key: 'reFetch',
   default: false,
 });
+export const errormsg = atom({
+  key: 'errormsg',
+  default: false,
+});
 export const deletebtn = atom({
   key: 'deletebtn',
+  default: false,
+});
+export const loggedin = atom({
+  key: 'loggedin',
   default: false,
 });
 export const CommentPopup = atom({
   key: 'CommentPopup',
   default: false,
 });
-export const Curremail = atom({
-  key: 'Curremail',
-  default: "sourav"
+export const currentUserEmail = atom({
+  key: 'currentUserEmail',
+  default: "default"
 });
 
 interface Comment {
   id: number;
   user: {
-    firstName: string;
-    lastName: string;
+    name :string
   };
   rating: number |null;
   comment: string | null;
@@ -38,4 +45,8 @@ interface Comment {
 export const comments = atom<Comment[]>({
   key: 'comments',
   default: [],
+});
+export const userComments = atom<Comment|null>({
+  key: 'userComments',
+  default: null
 });

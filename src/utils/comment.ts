@@ -1,53 +1,117 @@
 "use server"
+import { getServerSession } from "next-auth"
 import prisma from "../../db/db"
 
-export const createFeedback = async(email : string ,comment : string , rating : number)=>{
-    const user = await prisma.users.findUnique({
-        where : {
-            email
-        },
-        select : {
-            id : true
+export const createFeedback = async(comment :string , rating : number)=>{
+    const session = await getServerSession()
+    const email = session?.user?.email
+    if(email){
+        const user = await prisma.users.findUnique({
+            where : {
+                email
+            },
+            select : {
+                id : true
+            }
+        })
+        if(user == null){
+            return false
         }
-    })
-    const res = await prisma.feedback.create({
-        data : {
-            comment,
-            rating,
-            user : {
-                connect : {
-                    id : user?.id
+        else{
+            try{
+                const res = await prisma.feedback.create({
+                    data : {
+                        comment,
+                        rating,
+                        user : {
+                            connect : {
+                                id : user?.id
+                            }
+                        }
+                    },
+                    select : {
+                        id : true
+                    }
+                })
+                if(res){
+                    return true
+                }
+                else{
+                    return false
                 }
             }
-        },
-        select : {
-            id : true
+            catch{
+                return false
+            }
         }
-    })
-    if(res){
-        return true
+        
+    }
+}
+export const getUserFeedback = async()=>{
+    const session = await getServerSession()
+    const email = session?.user?.email
+    if(email){
+        const user = await prisma.users.findFirst({where : {email},select : {id : true}})
+        const res = await prisma.feedback.findFirst({
+            where : {
+                userId : user?.id
+            },
+            select : {
+                id : true,
+                comment : true,
+                rating : true,
+                createdAt : true,
+                updatedAt : true,
+                user : {
+                    select : {
+                        name : true
+                    }
+                }
+            }
+        })
+        if(res){
+            return res
+        }
+        else{
+            return false
+        }
     }
     else{
         return false
     }
 }
-export const getFeedback = async()=>{
-    const res = await prisma.feedback.findMany({
-        select : {
-            id : true,
-            comment : true,
-            rating : true,
-            createdAt : true,
-            updatedAt : true,
-            user : {
-                select : {
-                    firstName : true,
-                    lastName : true
+export const getFeedback = async ()=>{
+    const session = await getServerSession()
+    const email = session?.user?.email
+    if(email){
+        const user = await prisma.users.findUnique({where : {email},select:{id:true}})
+        const res = await prisma.feedback.findMany({
+            where : {
+                NOT : {
+                    userId : user?.id
+                }
+            },
+            select : {
+                id : true,
+                comment : true,
+                rating : true,
+                createdAt : true,
+                updatedAt : true,
+                user : {
+                    select : {
+                        name : true
+                    }
                 }
             }
+        })
+        if(res.length!==0){
+            return res
         }
-    })
-    return res;
+        else{
+            return false
+        }
+    }
+    
 }
 export const updateFeedback = async(email : string ,comment : string)=>{
     const user = await prisma.users.findUnique({

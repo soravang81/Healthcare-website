@@ -11,11 +11,17 @@ datasource db {
 model Users{
   id Int @id @default(autoincrement())
   email String @unique
+  password String
+  name String
+  feedback Feedback[]
+}
+model BookedUser{
+  id Int @id @default(autoincrement())
+  email String @unique
   firstName String
   lastName String
   phoneNumber String?
   appointment Appointments[]
-  feedback Feedback[]
 }
 model Appointments{
   id Int @id @default(autoincrement())
@@ -26,8 +32,8 @@ model Appointments{
   note String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId Int @unique
-  user Users  @relation(fields: [userId] , references: [id] ,onDelete: Cascade)
+  buid Int @unique
+  buser BookedUser  @relation(fields: [buid] , references: [id] ,onDelete: Cascade)
 }
 
 model Feedback{
