@@ -20,13 +20,11 @@ export default function SigninComp() {
       const result = await signIn('credentials', {
         email: currentemail,
         password,
-        redirect : false// Do not redirect here, handle the response manually
+        redirect : false
       });
-      // console.log(result);
 
       if (result?.error) {
         console.error("Authentication failed:", result.error);
-        // Handle authentication error
       } else {
         console.log("Authentication successful");
         setisLoggedin(true);
@@ -34,13 +32,7 @@ export default function SigninComp() {
       }
     } catch (error) {
       console.error("Authentication failed:", error);
-      // Handle authentication error
     }
-    // const res = await verifyUsers({email:currentemail, password})
-    // if(res){
-    //   console.log(currentemail)
-    //   setisLoggedin(true)
-    //   router.push("/home")
   }
   return (
     <div className="flex justify-center align-middle pt-20 ">
@@ -48,12 +40,15 @@ export default function SigninComp() {
         <h1 className=" text-4xl font-semibold text-center">Sign in</h1>
         <p className=" text-lg font-medium text-center">Please sign in to continue.</p>
         <div className="flex flex-col justify-center align-middle gap-8">
-          <input className=" p-4 border-b w-80%" type="text" placeholder="Username" onChange={(e) => setcurEmail(e.target.value)} />
+          <input className=" p-4 border-b w-80%" type="text" placeholder="Email" onChange={(e) => setcurEmail(e.target.value)} />
           <input className=" p-4 border-b w-80%" type="password" placeholder="Password"  onChange={(e) => setPassword(e.target.value)} />
           <button 
             className=" bg-blue-500 p-4 rounded-lg hover:bg-blue-800" 
             onClick={handleClick}>Submit
-            </button>
+          </button>
+        </div>
+        <div className="flex justify-end">
+            <button className="px-6 text-blue-800 text-base font-semibold" onClick={()=>router.push("/signup")}>Signup</button>
         </div>
       </div>
     </div>

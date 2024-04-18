@@ -14,8 +14,11 @@ export default function SignupComp() {
 
   async function handleClick(){
     const res = await createUser({email:currentemail, password , name})
-    if(res){
-      router.push("/home")
+    if (!res) {
+      console.error("Signup failed");
+    } else {
+      console.log("Signup successful");
+      router.push("/home");
     }
   }
 
@@ -26,14 +29,18 @@ export default function SignupComp() {
         <p className=" text-lg font-medium text-center">Please sign up to continue.</p>
         <div className="flex flex-col justify-center align-middle gap-8">
           <div className="flex justify-between">
-            <input className=" p-4 border-b w-[45%] rounded-lg" type="text" placeholder="Username" onChange={(e) => setcurEmail(e.target.value)} />
+            <input className=" p-4 border-b w-[45%] rounded-lg" type="text" placeholder="Email" onChange={(e) => setcurEmail(e.target.value)} />
             <input className=" p-4 border-b w-[45%] rounded-lg" type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />
           </div>
           <input className=" p-4 border-b w-80% rounded-lg" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
           <button 
             className=" bg-blue-500 p-4 rounded-lg hover:bg-blue-800" 
             onClick={handleClick}>Submit
-            </button>
+          </button>
+          
+        </div>
+        <div className="flex justify-end">
+            <button className="px-6 text-blue-800 text-base font-semibold" onClick={()=>router.push("/signin")}>Signin</button>
         </div>
       </div>
     </div>
