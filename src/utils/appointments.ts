@@ -84,7 +84,7 @@ export const createAppointment = async(props:createAp)=>{
 export const getAppointments = async ( email : string)=>{
     const res = await prisma.appointments.findFirst({
         where : {
-            user : {
+            buser : {
                 email
             }
         },
