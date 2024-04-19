@@ -20,6 +20,7 @@ export default function SigninComp() {
       const result = await signIn('credentials', {
         email: currentemail,
         password,
+        action : "signin",
         redirect : false
       });
 

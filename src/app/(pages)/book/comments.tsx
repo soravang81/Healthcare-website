@@ -87,29 +87,29 @@ export function CommentCard(){
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true); // Set loading to true initially
-            
-            try {
-                // Fetch user comment and comment array concurrently
-                const [userCommentRes, commentArrRes] = await Promise.all([getUserFeedback(), getFeedback()]);
-
-                // Process user comment result
-                if (userCommentRes) {
-                    setIfExists(true);
-                    setUserComment(userCommentRes);
-                } else {
-                    setIfExists(false);
-                    setUserComment(null);
+            setLoading(true); 
+            if(session && session.user && typeof session.user.email === 'string'){
+                const email = session.user.email
+                try {
+                    const [userCommentRes, commentArrRes] = await Promise.all([getUserFeedback(email), getFeedback(email)]);
+    
+                    if (userCommentRes) {
+                        setIfExists(true);
+                        setUserComment(userCommentRes);
+                    } else {
+                        setIfExists(false);
+                        setUserComment(null);
+                    }
+    
+                    setLoading(false);
+                    setIsEmpty(!commentArrRes);
+                    setCommentArr(commentArrRes || []);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    setLoading(false);
                 }
-
-                // Process comment array result
-                setLoading(false);
-                setIsEmpty(!commentArrRes);
-                setCommentArr(commentArrRes || []);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setLoading(false);
             }
+            
         };
 
         fetchData();
@@ -215,26 +215,32 @@ export function CommentAddPopup() {
   const [rating, setRating] = useState<number>(0);
   const [userExists, setUserExists] = useRecoilState<boolean>(errormsg);
   const [comment, setComment] = useState<string>("");
-    
+  const { data : session } = useSession()
+
   const handleClick = (index: number) => {
     setRating(index + 1);
   };
   const handleSubmit = async()=>{
-    try{
-        setRating(0)
-        const res = await createFeedback(comment,rating,)
-        if(res){
-            setPopup(false)
-            setrefetch(!refetch)
+    if(session && session.user && typeof session.user.email === 'string'){
+        const email = session.user.email
+        try{
+            setRating(0)
+            
+            const res = await createFeedback(email , comment,rating,)
+            if(res){
+                setPopup(false)
+                setrefetch(!refetch)
+            }
+            else{
+                setPopup(false)
+                setUserExists(true)
+            }
         }
-        else{
-            setPopup(false)
-            setUserExists(true)
-        }
+        catch(e){
+            console.error(e);
+        }    
     }
-    catch(e){
-        console.error(e);
-    }
+    
   }
   return (
     <>

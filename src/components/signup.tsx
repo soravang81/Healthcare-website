@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createUser } from "@/utils/users";
 import { currentUserEmail } from "@/recoil/state";
 import { useRecoilState, useSetRecoilState } from "recoil";
+import { signIn } from "next-auth/react";
 
 export default function SignupComp() {
   const [currentemail,setcurEmail] = useRecoilState(currentUserEmail)
@@ -13,7 +14,12 @@ export default function SignupComp() {
   const router = useRouter();
 
   async function handleClick(){
-    const res = await createUser({email:currentemail, password , name})
+    const res = await await signIn('credentials', {
+      email: currentemail,
+      password,
+      action : "signup",
+      redirect : false
+    });
     if (!res) {
       console.error("Signup failed");
     } else {

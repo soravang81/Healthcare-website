@@ -1,4 +1,4 @@
-import { getUsers, verifyUsers } from "@/utils/users";
+import { createUser, getUsers, verifyUsers } from "@/utils/users";
 import { sign } from "crypto";
 import NextAuth, { Session , User } from "next-auth"
 import CredentialsProvider from 'next-auth/providers/credentials';
@@ -8,6 +8,7 @@ export interface userr {
     id: string
     name?: string | null
     email?: string | null
+    action?: string | null
     image?: string | null
   }
 const handler = NextAuth({
@@ -17,16 +18,33 @@ const handler = NextAuth({
             credentials: {
                 email: { label: 'Email', type: 'text', placeholder: '' },
                 password: { label: 'Password', type: 'password' },
+                name: { label: 'name', type: 'text' },
+                action: { label: 'action', type: 'text' },
             },
-            async authorize(credentials: any ) {
-                const res = await verifyUsers(credentials)as userr | false;
-                if(res){
-                    return res as User | null
+            async authorize(credentials: Record<"email" | "password" | "name" | "action", string> | undefined) {
+                if (!credentials) {
+                    return null;
                 }
-                else{
-                    return null
+                if (credentials.action === "signin") {
+                    const res = await verifyUsers(credentials) as userr | false;
+                    if (res) {
+                        return res as User | null;
+                    } else {
+                        return null;
+                    }
                 }
+                else if (credentials.action === "signup") {
+                    const { email, password, name } = credentials;
+                    const res = await createUser({ email, password, name }) as userr | false;
+                    if (res) {
+                        return res as User | null;
+                    } else {
+                        return null;
+                    }
+                }
+                return null;
             },
+            
         }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
@@ -45,7 +63,7 @@ const handler = NextAuth({
       }
     },
     pages :{
-        signIn : "/signin",
+        signIn : "/signin" && "/signup", 
     }
 })
 

@@ -2,9 +2,9 @@
 import { getServerSession } from "next-auth"
 import prisma from "../../db/db"
 
-export const createFeedback = async(comment :string , rating : number)=>{
-    const session = await getServerSession()
-    const email = session?.user?.email
+export const createFeedback = async(email : string ,comment :string , rating : number)=>{
+    // const session = await getServerSession()
+    // const email = session?.user?.email
     if(email){
         const user = await prisma.users.findUnique({
             where : {
@@ -47,9 +47,9 @@ export const createFeedback = async(comment :string , rating : number)=>{
         
     }
 }
-export const getUserFeedback = async()=>{
-    const session = await getServerSession()
-    const email = session?.user?.email
+export const getUserFeedback = async(email:string)=>{
+    // const session = await getServerSession()
+    // const email = session?.user?.email
     if(email){
         const user = await prisma.users.findFirst({where : {email},select : {id : true}})
         const res = await prisma.feedback.findFirst({
@@ -80,9 +80,9 @@ export const getUserFeedback = async()=>{
         return false
     }
 }
-export const getFeedback = async ()=>{
-    const session = await getServerSession()
-    const email = session?.user?.email
+export const getFeedback = async (email:string)=>{
+    // const session = await getServerSession()
+    // const email = session?.user?.email
     if(email){
         const user = await prisma.users.findUnique({where : {email},select:{id:true}})
         const res = await prisma.feedback.findMany({

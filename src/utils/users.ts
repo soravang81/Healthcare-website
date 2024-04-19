@@ -10,7 +10,6 @@ export interface VerifyUser {
     password?: string;
 }
 export const verifyUsers = async ({email , password}:VerifyUser)=>{
-    // console.log(email, password)
     const res = await prisma.users.findFirst({
         where : {
             email,
@@ -22,7 +21,6 @@ export const verifyUsers = async ({email , password}:VerifyUser)=>{
             password : true
         }
     })
-    // console.log(res)
     if(res){
         return res
     }
@@ -30,16 +28,12 @@ export const verifyUsers = async ({email , password}:VerifyUser)=>{
         return false
     }
 }
-interface createUser{
+export interface createUser{
     email : string,
     password : string,
     name : string
 }
 export const createUser = async ( {email , password , name } : createUser)=>{
-    // console.log(
-    //     email,
-    //     password,
-    //     name)
     const res = await prisma.users.create({
         data: {
             email,
@@ -47,11 +41,12 @@ export const createUser = async ( {email , password , name } : createUser)=>{
             name
         },
         select:{
-            email : true
+            id : true,
+            email : true,
         }
     })
     if(res){
-        return true
+        return res
     }
     else{
         return false;
